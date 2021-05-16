@@ -1,0 +1,10 @@
+<resources>
+    <!--common-->
+    <string name="go_to_app_info">Go to AppInfo</string>
+    <string name="ask_permission">Ask Permission</string>
+    <string name="try_again">Try Again</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="flickr_list">Flickr List</string>
+    <string name="flickr_details">Flickr Details</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lrf_navigation"
+    app:startDestination="@id/flickrListFragment">
+
+    <fragment
+        android:id="@+id/flickrListFragment"
+        android:name="com.psflickr.presentation.flickr.listing.RecentFragment"
+        android:label="RecentFragment"
+        tools:layout="@layout/fragment_recent">
+        <action
+            android:id="@+id/actionFlickrListFragmentToDetailFragment"
+            app:destination="@id/flickrDetailFragment"
+            app:enterAnim="@anim/right_in"
+            app:exitAnim="@anim/zoom_exit"
+            app:popEnterAnim="@anim/zoom_enter"
+            app:popExitAnim="@anim/right_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/flickrDetailFragment"
+        android:name="com.psflickr.presentation.flickr.details.FlickrDetailsFragment"
+        android:label="FlickrDetailsFragment"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="photo"
+            app:argType="com.psflickr.data.flickr.entity.Photo" />
+    </fragment>
+
+</navigation>

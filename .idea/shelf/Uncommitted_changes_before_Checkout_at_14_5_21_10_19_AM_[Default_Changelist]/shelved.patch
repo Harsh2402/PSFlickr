@@ -1,0 +1,528 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\n\napply plugin: 'kotlin-android'\n\napply plugin: 'kotlin-android-extensions'\n\napply plugin: 'kotlin-kapt'\n\napply plugin: \"androidx.navigation.safeargs.kotlin\"\n\napply from: \"${rootProject.projectDir}/flavors.gradle\"\n\napply plugin: 'com.google.gms.google-services'\n\napply plugin: 'com.google.firebase.crashlytics'\n\nandroid {\n    compileSdkVersion Release.compileSdkVersion\n    defaultConfig {\n        applicationId ApplicationId.id\n        minSdkVersion Release.minSdkVersion\n        targetSdkVersion Release.targetSdkVersion\n        versionCode Release.versionCode\n        versionName Release.versionName\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n        buildConfigField 'int', 'DATABASE_VERSION', '1'\n        buildConfigField 'String', 'DATABASE_NAME', '\"app_database\"'\n        multiDexEnabled true\n        vectorDrawables.useSupportLibrary = true\n\n        javaCompileOptions {\n            annotationProcessorOptions {\n                arguments = [\"room.schemaLocation\": \"$projectDir/schemas\".toString()]\n            }\n        }\n    }\n\n    compileOptions {\n        sourceCompatibility 1.8\n        targetCompatibility 1.8\n    }\n\n    signingConfigs {\n        debug {\n            storeFile file(\"./debug.keystore\")\n            storePassword \"android\"\n            keyAlias \"androiddebugkey\"\n            keyPassword \"android\"\n        }\n        release\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n\n    }\n\n    with flavorConfig\n\n    androidExtensions {\n        experimental = true\n    }\n\n    testOptions {\n        unitTests.returnDefaultValues = true\n    }\n\n    kotlinOptions {\n        jvmTarget = \"1.8\"\n    }\n}\n\n\nProperties props = new Properties()\ndef propFile = new File('keystore.properties')\nif (propFile.canRead()) {\n    props.load(new FileInputStream(propFile))\n\n    if (props != null && props.containsKey('storeFile') && props.containsKey('storePassword') &&\n            props.containsKey('keyAlias') && props.containsKey('keyPassword')) {\n        android.signingConfigs.release.storeFile = file(props['storeFile'])\n        android.signingConfigs.release.storePassword = props['storePassword']\n        android.signingConfigs.release.keyAlias = props['keyAlias']\n        android.signingConfigs.release.keyPassword = props['keyPassword']\n    } else {\n        println 'signing.properties found but some entries are missing'\n        android.buildTypes.release.signingConfig = null\n    }\n} else {\n    println 'signing.properties not found'\n    android.buildTypes.release.signingConfig = null\n}\n\n\ndependencies {\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\n\n    //support\n    implementation Dependencies.kotlin\n    implementation Support.appCompat\n    implementation Support.core\n    implementation Support.constraintLayout\n    implementation Support.materialComponent\n    implementation Support.legacySupport\n    implementation Support.lifeCycleExtensions\n\n    //navigation\n    api Arch.navigationFragment\n    api Arch.navigationKtx\n\n    //reactivex\n    implementation Reactivex.kotlin\n    implementation Reactivex.android\n\n    //Dagger2\n    implementation Dagger.dagger\n    kapt Dagger.daggerCompiler\n\n    //unittest\n    testImplementation TestLibs.junit\n    androidTestImplementation TestLibs.testRunner\n\n    //Logger\n    implementation Log.timber\n\n    //Reactivex\n    implementation Reactivex.rxBinding\n\n    implementation GooglePlayServices.googlePlayService\n\n    // Link Builder\n    implementation Link.klinkerapps\n\n    // Image Picker\n    implementation ImagePicker.imagePicker\n\n    //CircularImageView\n    implementation CircularImageView.circularImageView\n\n    //Image loading\n    implementation Image.glide\n    kapt Image.glideCompiler\n\n    //Runtime Permissions\n    implementation PermissionDispatcher.permissionsDispatcher\n    kapt PermissionDispatcher.permissionsDispatcherProcessor\n\n    //network\n    api Retrofit.retrofit\n    api Retrofit.gsonConverter\n    api Retrofit.adapterRxJava\n    api Retrofit.loggingInterceptor\n    api Json.gson\n\n    // Room\n    api Database.room\n    kapt Database.roomCompiler\n    api Database.roomRx\n\n    //Facebook\n    implementation Facebook.facebookLogin\n\n    // Custom Shadow\n    implementation CustomShadow.shadow\n\n    // circle imageview\n    implementation CircularImageView.circularImageView\n\n    implementation ImagePicker.imagePicker\n\n    // indicator\n    implementation ViewPager.viewPagerIndicator\n\n    api GoogleMapSdk.googleLocationServices\n\n    implementation FaddingPageLayout.faddingPageLayout\n\n    implementation Firebase.FirebaseMessaging\n\n    implementation Firebase.crashlytics\n\n    implementation Stripe.Stripe\n\n    implementation FacebookShimmer.FacebookShimmer\n\n    implementation ShimmerRecyclerview.ShimmerRecyclerview\n    //Unit tests\n    testImplementation Unittests.CoreMockito\n    testImplementation Unittests.MokitoKotlin\n    testImplementation Unittests.MokitoInline\n    testImplementation Unittests.CoreTesting\n    testImplementation Unittests.DaggerMock\n    testImplementation Unittests.Junit\n\n    implementation PhotoView.PhotoView\n\n    implementation YoutubePlayer.YoutubeView\n\n\n    // JuspaySDK\n    implementation JuspaySDK.juspaySDK\n    implementation ExoPlayer.ExoView\n    implementation ExoPlayer.Core\n    implementation ExoPlayer.dash\n    implementation ExoPlayer.ui\n\n    implementation ViewPager2.viewPager2\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
++++ app/build.gradle	(date 1620904187000)
+@@ -1,17 +1,10 @@
+ apply plugin: 'com.android.application'
+-
+ apply plugin: 'kotlin-android'
+-
+ apply plugin: 'kotlin-android-extensions'
+-
+ apply plugin: 'kotlin-kapt'
+-
+ apply plugin: "androidx.navigation.safeargs.kotlin"
+-
+ apply from: "${rootProject.projectDir}/flavors.gradle"
+-
+ apply plugin: 'com.google.gms.google-services'
+-
+ apply plugin: 'com.google.firebase.crashlytics'
+ 
+ android {
+@@ -23,16 +16,7 @@
+         versionCode Release.versionCode
+         versionName Release.versionName
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+-        buildConfigField 'int', 'DATABASE_VERSION', '1'
+-        buildConfigField 'String', 'DATABASE_NAME', '"app_database"'
+         multiDexEnabled true
+-        vectorDrawables.useSupportLibrary = true
+-
+-        javaCompileOptions {
+-            annotationProcessorOptions {
+-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+-            }
+-        }
+     }
+ 
+     compileOptions {
+@@ -123,23 +107,9 @@
+     testImplementation TestLibs.junit
+     androidTestImplementation TestLibs.testRunner
+ 
+-    //Logger
+-    implementation Log.timber
+-
+     //Reactivex
+     implementation Reactivex.rxBinding
+ 
+-    implementation GooglePlayServices.googlePlayService
+-
+-    // Link Builder
+-    implementation Link.klinkerapps
+-
+-    // Image Picker
+-    implementation ImagePicker.imagePicker
+-
+-    //CircularImageView
+-    implementation CircularImageView.circularImageView
+-
+     //Image loading
+     implementation Image.glide
+     kapt Image.glideCompiler
+@@ -155,38 +125,6 @@
+     api Retrofit.loggingInterceptor
+     api Json.gson
+ 
+-    // Room
+-    api Database.room
+-    kapt Database.roomCompiler
+-    api Database.roomRx
+-
+-    //Facebook
+-    implementation Facebook.facebookLogin
+-
+-    // Custom Shadow
+-    implementation CustomShadow.shadow
+-
+-    // circle imageview
+-    implementation CircularImageView.circularImageView
+-
+-    implementation ImagePicker.imagePicker
+-
+-    // indicator
+-    implementation ViewPager.viewPagerIndicator
+-
+-    api GoogleMapSdk.googleLocationServices
+-
+-    implementation FaddingPageLayout.faddingPageLayout
+-
+-    implementation Firebase.FirebaseMessaging
+-
+-    implementation Firebase.crashlytics
+-
+-    implementation Stripe.Stripe
+-
+-    implementation FacebookShimmer.FacebookShimmer
+-
+-    implementation ShimmerRecyclerview.ShimmerRecyclerview
+     //Unit tests
+     testImplementation Unittests.CoreMockito
+     testImplementation Unittests.MokitoKotlin
+@@ -194,18 +132,4 @@
+     testImplementation Unittests.CoreTesting
+     testImplementation Unittests.DaggerMock
+     testImplementation Unittests.Junit
+-
+-    implementation PhotoView.PhotoView
+-
+-    implementation YoutubePlayer.YoutubeView
+-
+-
+-    // JuspaySDK
+-    implementation JuspaySDK.juspaySDK
+-    implementation ExoPlayer.ExoView
+-    implementation ExoPlayer.Core
+-    implementation ExoPlayer.dash
+-    implementation ExoPlayer.ui
+-
+-    implementation ViewPager2.viewPager2
+ }
+Index: app/schemas/com.nutristar.data.AppDatabase/1002000.json
+===================================================================
+--- app/schemas/com.nutristar.data.AppDatabase/1002000.json	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
++++ app/schemas/com.nutristar.data.AppDatabase/1002000.json	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
+@@ -1,156 +0,0 @@
+-{
+-  "formatVersion": 1,
+-  "database": {
+-    "version": 1002000,
+-    "identityHash": "a3b484c86330584b255c6786ebe36ae4",
+-    "entities": [
+-      {
+-        "tableName": "user",
+-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mobileVerified` INTEGER NOT NULL, `nutricash` INTEGER NOT NULL, `id` INTEGER NOT NULL, `name` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT, `email` TEXT NOT NULL, `mobile` TEXT NOT NULL, `image` TEXT NOT NULL, `gender` INTEGER NOT NULL, `dob` TEXT, `codActive` INTEGER NOT NULL, `notify` INTEGER NOT NULL, `userType` INTEGER NOT NULL, `pincode` TEXT NOT NULL, `mobileChanged` INTEGER NOT NULL, `referralCode` TEXT NOT NULL, PRIMARY KEY(`id`))",
+-        "fields": [
+-          {
+-            "fieldPath": "mobileVerified",
+-            "columnName": "mobileVerified",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "nutricash",
+-            "columnName": "nutricash",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "id",
+-            "columnName": "id",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "name",
+-            "columnName": "name",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "firstName",
+-            "columnName": "firstName",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "lastName",
+-            "columnName": "lastName",
+-            "affinity": "TEXT",
+-            "notNull": false
+-          },
+-          {
+-            "fieldPath": "email",
+-            "columnName": "email",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "mobile",
+-            "columnName": "mobile",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "image",
+-            "columnName": "image",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "gender",
+-            "columnName": "gender",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "dob",
+-            "columnName": "dob",
+-            "affinity": "TEXT",
+-            "notNull": false
+-          },
+-          {
+-            "fieldPath": "codActive",
+-            "columnName": "codActive",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "notify",
+-            "columnName": "notify",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "userType",
+-            "columnName": "userType",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "pincode",
+-            "columnName": "pincode",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "mobileChanged",
+-            "columnName": "mobileChanged",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "referralCode",
+-            "columnName": "referralCode",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          }
+-        ],
+-        "primaryKey": {
+-          "columnNames": [
+-            "id"
+-          ],
+-          "autoGenerate": false
+-        },
+-        "indices": [],
+-        "foreignKeys": []
+-      },
+-      {
+-        "tableName": "recent_search",
+-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recentSearch` TEXT NOT NULL)",
+-        "fields": [
+-          {
+-            "fieldPath": "id",
+-            "columnName": "id",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "recentSearch",
+-            "columnName": "recentSearch",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          }
+-        ],
+-        "primaryKey": {
+-          "columnNames": [
+-            "id"
+-          ],
+-          "autoGenerate": true
+-        },
+-        "indices": [],
+-        "foreignKeys": []
+-      }
+-    ],
+-    "views": [],
+-    "setupQueries": [
+-      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3b484c86330584b255c6786ebe36ae4')"
+-    ]
+-  }
+-}
+\ No newline at end of file
+Index: app/schemas/com.nutristar.data.AppDatabase/1.json
+===================================================================
+--- app/schemas/com.nutristar.data.AppDatabase/1.json	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
++++ app/schemas/com.nutristar.data.AppDatabase/1.json	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
+@@ -1,162 +0,0 @@
+-{
+-  "formatVersion": 1,
+-  "database": {
+-    "version": 1,
+-    "identityHash": "df8c1a54d7da95ac56e70dd6cf9dbebb",
+-    "entities": [
+-      {
+-        "tableName": "user",
+-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mobileVerified` INTEGER NOT NULL, `nutricash` INTEGER NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT, `email` TEXT NOT NULL, `mobile` TEXT NOT NULL, `image` TEXT NOT NULL, `gender` INTEGER NOT NULL, `dob` TEXT, `codActive` INTEGER NOT NULL, `notify` INTEGER NOT NULL, `userType` INTEGER NOT NULL, `pincode` TEXT NOT NULL, `mobileChanged` INTEGER NOT NULL, `referralCode` TEXT NOT NULL, PRIMARY KEY(`id`))",
+-        "fields": [
+-          {
+-            "fieldPath": "mobileVerified",
+-            "columnName": "mobileVerified",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "nutricash",
+-            "columnName": "nutricash",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "id",
+-            "columnName": "id",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "name",
+-            "columnName": "name",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "firstName",
+-            "columnName": "firstName",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "lastName",
+-            "columnName": "lastName",
+-            "affinity": "TEXT",
+-            "notNull": false
+-          },
+-          {
+-            "fieldPath": "email",
+-            "columnName": "email",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "mobile",
+-            "columnName": "mobile",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "image",
+-            "columnName": "image",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "gender",
+-            "columnName": "gender",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "dob",
+-            "columnName": "dob",
+-            "affinity": "TEXT",
+-            "notNull": false
+-          },
+-          {
+-            "fieldPath": "codActive",
+-            "columnName": "codActive",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "notify",
+-            "columnName": "notify",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "userType",
+-            "columnName": "userType",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "pincode",
+-            "columnName": "pincode",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "mobileChanged",
+-            "columnName": "mobileChanged",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "referralCode",
+-            "columnName": "referralCode",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          }
+-        ],
+-        "primaryKey": {
+-          "columnNames": [
+-            "id"
+-          ],
+-          "autoGenerate": false
+-        },
+-        "indices": [],
+-        "foreignKeys": []
+-      },
+-      {
+-        "tableName": "recent_search",
+-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `query` TEXT NOT NULL, `slug` TEXT NOT NULL)",
+-        "fields": [
+-          {
+-            "fieldPath": "id",
+-            "columnName": "id",
+-            "affinity": "INTEGER",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "query",
+-            "columnName": "query",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          },
+-          {
+-            "fieldPath": "slug",
+-            "columnName": "slug",
+-            "affinity": "TEXT",
+-            "notNull": true
+-          }
+-        ],
+-        "primaryKey": {
+-          "columnNames": [
+-            "id"
+-          ],
+-          "autoGenerate": true
+-        },
+-        "indices": [],
+-        "foreignKeys": []
+-      }
+-    ],
+-    "views": [],
+-    "setupQueries": [
+-      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'df8c1a54d7da95ac56e70dd6cf9dbebb')"
+-    ]
+-  }
+-}
+\ No newline at end of file
+Index: flavors.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>ext.flavorConfig = {\n\n    flavorDimensions \"environment\"\n\n    productFlavors {\n\n        development {\n            dimension \"environment\"\n            versionName \"${Release.versionNameDev}-dev\"\n            applicationIdSuffix \".dev\"\n            resValue \"string\", \"app_name\", \"NutriStar(DEV)\"\n            resValue \"string\", \"REQUEST_ID_TOKEN\", \"518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com\"\n            buildConfigField(\"String\", \"API_VERSION\", \"\\\"v1/\\\"\")\n            //TODO: Change topic names when available for development below are temp\n            buildConfigField 'String', 'TOPIC_NEW', '\"nust-stag-new\"'\n            buildConfigField 'String', 'TOPIC_OLD', '\"nust-stag-old\"'\n            buildConfigField 'String', 'TOPIC_ALL', '\"nust-stag-all\"'\n            buildConfigField 'String', 'API_BASE_URL', '\"http://a9a77cef36dd.ngrok.io/api/\"'\n        }\n\n        staging {\n            dimension \"environment\"\n            versionName \"${Release.versionNameDev}-stage\"\n            applicationIdSuffix \".stage\"\n            resValue \"string\", \"app_name\", \"NutriStar(STAGE)\"\n            resValue \"string\", \"REQUEST_ID_TOKEN\", \"518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com\"\n            buildConfigField(\"String\", \"API_VERSION\", \"\\\"v1/\\\"\")\n            buildConfigField 'String', 'API_BASE_URL', '\"https://staging-api.baeprotein.com/api/\"'\n            buildConfigField 'String', 'TOPIC_NEW', '\"nust-stag-new\"'\n            buildConfigField 'String', 'TOPIC_OLD', '\"nust-stag-old\"'\n            buildConfigField 'String', 'TOPIC_ALL', '\"nust-stag-all\"'\n        }\n\n        preproduction {\n            dimension \"environment\"\n            versionName \"${Release.versionNameDev}-stage\"\n            applicationIdSuffix \".stage\"\n            resValue \"string\", \"app_name\", \"NutriStar\"\n            resValue \"string\", \"REQUEST_ID_TOKEN\", \"518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com\"\n            buildConfigField(\"String\", \"API_VERSION\", \"\\\"v1/\\\"\")\n            buildConfigField 'String', 'API_BASE_URL', '\"https://pre-prod-api.baeprotein.com/api/\"'\n            buildConfigField 'String', 'TOPIC_NEW', '\"nust-pre-new\"'\n            buildConfigField 'String', 'TOPIC_OLD', '\"nust-pre-old\"'\n            buildConfigField 'String', 'TOPIC_ALL', '\"nust-pre-all\"'\n        }\n\n        production {\n            dimension \"environment\"\n            versionName \"${Release.versionNameDev}-stage\"\n            applicationIdSuffix \".stage\"\n            resValue \"string\", \"app_name\", \"NutriStar(STAGE)\"\n            resValue \"string\", \"app_name\", \"NutriStar\"\n            buildConfigField 'String', 'API_BASE_URL', '\"https://pre-prod-api.baeprotein.com/api/v1/\"'\n\n            //TODO: Change topic names when available for production below are temp\n            buildConfigField 'String', 'TOPIC_NEW', '\"nust-prod-new\"'\n            buildConfigField 'String', 'TOPIC_OLD', '\"nust-prod-old\"'\n            buildConfigField 'String', 'TOPIC_ALL', '\"nust-prod-all\"'\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- flavors.gradle	(revision 2f1544ee031e6153491a37a0f1e4a38391352bfa)
++++ flavors.gradle	(date 1620904187000)
+@@ -1,61 +1,12 @@
+ ext.flavorConfig = {
+-
+     flavorDimensions "environment"
+-
+     productFlavors {
+-
+         development {
+             dimension "environment"
+             versionName "${Release.versionNameDev}-dev"
+             applicationIdSuffix ".dev"
+-            resValue "string", "app_name", "NutriStar(DEV)"
+-            resValue "string", "REQUEST_ID_TOKEN", "518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com"
+-            buildConfigField("String", "API_VERSION", "\"v1/\"")
+-            //TODO: Change topic names when available for development below are temp
+-            buildConfigField 'String', 'TOPIC_NEW', '"nust-stag-new"'
+-            buildConfigField 'String', 'TOPIC_OLD', '"nust-stag-old"'
+-            buildConfigField 'String', 'TOPIC_ALL', '"nust-stag-all"'
++            resValue "string", "app_name", "PSFlickr(DEV)"
+             buildConfigField 'String', 'API_BASE_URL', '"http://a9a77cef36dd.ngrok.io/api/"'
+         }
+-
+-        staging {
+-            dimension "environment"
+-            versionName "${Release.versionNameDev}-stage"
+-            applicationIdSuffix ".stage"
+-            resValue "string", "app_name", "NutriStar(STAGE)"
+-            resValue "string", "REQUEST_ID_TOKEN", "518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com"
+-            buildConfigField("String", "API_VERSION", "\"v1/\"")
+-            buildConfigField 'String', 'API_BASE_URL', '"https://staging-api.baeprotein.com/api/"'
+-            buildConfigField 'String', 'TOPIC_NEW', '"nust-stag-new"'
+-            buildConfigField 'String', 'TOPIC_OLD', '"nust-stag-old"'
+-            buildConfigField 'String', 'TOPIC_ALL', '"nust-stag-all"'
+-        }
+-
+-        preproduction {
+-            dimension "environment"
+-            versionName "${Release.versionNameDev}-stage"
+-            applicationIdSuffix ".stage"
+-            resValue "string", "app_name", "NutriStar"
+-            resValue "string", "REQUEST_ID_TOKEN", "518152279683-417qhnmcnad0tbfg1v6omg2s35093gbp.apps.googleusercontent.com"
+-            buildConfigField("String", "API_VERSION", "\"v1/\"")
+-            buildConfigField 'String', 'API_BASE_URL', '"https://pre-prod-api.baeprotein.com/api/"'
+-            buildConfigField 'String', 'TOPIC_NEW', '"nust-pre-new"'
+-            buildConfigField 'String', 'TOPIC_OLD', '"nust-pre-old"'
+-            buildConfigField 'String', 'TOPIC_ALL', '"nust-pre-all"'
+-        }
+-
+-        production {
+-            dimension "environment"
+-            versionName "${Release.versionNameDev}-stage"
+-            applicationIdSuffix ".stage"
+-            resValue "string", "app_name", "NutriStar(STAGE)"
+-            resValue "string", "app_name", "NutriStar"
+-            buildConfigField 'String', 'API_BASE_URL', '"https://pre-prod-api.baeprotein.com/api/v1/"'
+-
+-            //TODO: Change topic names when available for production below are temp
+-            buildConfigField 'String', 'TOPIC_NEW', '"nust-prod-new"'
+-            buildConfigField 'String', 'TOPIC_OLD', '"nust-prod-old"'
+-            buildConfigField 'String', 'TOPIC_ALL', '"nust-prod-all"'
+-        }
+     }
+ }

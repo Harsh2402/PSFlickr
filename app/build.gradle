@@ -1,0 +1,111 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply from: "${rootProject.projectDir}/flavors.gradle"
+
+android {
+    compileSdkVersion Release.compileSdkVersion
+    defaultConfig {
+        applicationId ApplicationId.id
+        minSdkVersion Release.minSdkVersion
+        targetSdkVersion Release.targetSdkVersion
+        versionCode Release.versionCode
+        versionName Release.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        release
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    with flavorConfig
+
+    androidExtensions {
+        experimental = true
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+
+Properties props = new Properties()
+def propFile = new File('keystore.properties')
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+
+    if (props != null && props.containsKey('storeFile') && props.containsKey('storePassword') &&
+            props.containsKey('keyAlias') && props.containsKey('keyPassword')) {
+        android.signingConfigs.release.storeFile = file(props['storeFile'])
+        android.signingConfigs.release.storePassword = props['storePassword']
+        android.signingConfigs.release.keyAlias = props['keyAlias']
+        android.signingConfigs.release.keyPassword = props['keyPassword']
+    } else {
+        println 'signing.properties found but some entries are missing'
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    println 'signing.properties not found'
+    android.buildTypes.release.signingConfig = null
+}
+
+
+dependencies {
+    //support
+    implementation Dependencies.kotlin
+    implementation Support.appCompat
+    implementation Support.core
+    implementation Support.constraintLayout
+    implementation Support.materialComponent
+    implementation Support.legacySupport
+    implementation Support.lifeCycleExtensions
+
+    //navigation
+    api Arch.navigationFragment
+    api Arch.navigationKtx
+
+    //reactivex
+    implementation Reactivex.kotlin
+    implementation Reactivex.android
+
+    //Dagger2
+    implementation Dagger.dagger
+    kapt Dagger.daggerCompiler
+
+    //unittest
+//    testImplementation TestLibs.junit
+//    androidTestImplementation TestLibs.testRunner
+    testImplementation Unittests.CoreMockito
+    testImplementation Unittests.MokitoKotlin
+    testImplementation Unittests.MokitoInline
+    testImplementation Unittests.CoreTesting
+    testImplementation Unittests.DaggerMock
+    testImplementation Unittests.Junit
+
+    //Runtime Permissions
+    implementation PermissionDispatcher.permissionsDispatcher
+    kapt PermissionDispatcher.permissionsDispatcherProcessor
+
+    //network
+    api Retrofit.retrofit
+    api Retrofit.gsonConverter
+    api Retrofit.adapterRxJava
+    api Retrofit.loggingInterceptor
+    api Json.gson
+
+}

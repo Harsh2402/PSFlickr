@@ -1,0 +1,42 @@
+ext.flavorConfig = {
+
+    flavorDimensions "environment"
+
+    productFlavors {
+        mock {
+            dimension "environment"
+            versionName "${Release.versionNameDev}-mock"
+            applicationIdSuffix ".mock"
+            resValue "string", "app_name", "PSFlickr(MOCK)"
+            buildConfigField "String", "API_BASE_URL", "\"https://api.flickr.com/\""
+            buildConfigField "String", "API_KEY", "\"568208aa893c4dc05f1c79766e178498\""
+        }
+
+        development {
+            dimension "environment"
+            versionName "${Release.versionNameDev}-dev"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "PSFlickr(DEV)"
+            buildConfigField "String", "API_BASE_URL", "\"https://api.flickr.com/\""
+            buildConfigField "String", "API_KEY", "\"568208aa893c4dc05f1c79766e178498\""
+        }
+
+        staging {
+            dimension "environment"
+            versionName "${Release.versionNameDev}-stage"
+            applicationIdSuffix ".stage"
+            resValue "string", "app_name", "PSFlickr(STAGE)"
+            buildConfigField "String", "API_BASE_URL", "\"https://api.flickr.com/\""
+            buildConfigField "String", "API_KEY", "\"568208aa893c4dc05f1c79766e178498\""
+        }
+
+        production {
+            dimension "environment"
+            versionName Release.versionNameDev
+            resValue "string", "app_name", "PSFlickr"
+            buildConfigField "String", "API_BASE_URL", "\"https://api.flickr.com/\""
+            buildConfigField "String", "API_KEY", "\"568208aa893c4dc05f1c79766e178498\""
+        }
+    }
+}
+
